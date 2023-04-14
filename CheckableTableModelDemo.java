@@ -10,20 +10,19 @@ import java.io.InputStreamReader;
 import java.util.List;
 import javax.swing.JButton;
 import javax.swing.JCheckBox;
-import javax.swing.JComboBox;
 import javax.swing.JFileChooser;
 import javax.swing.JFrame;
-import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JTable;
 import javax.swing.JTextArea;
 import javax.swing.filechooser.FileNameExtensionFilter;
 import javax.swing.table.AbstractTableModel;
+import javax.swing.table.DefaultTableModel;
 import javax.swing.table.TableCellRenderer;
 
 public class CheckableTableModelDemo extends JPanel {
-    private final String[] columnNames = { "IP", "MAC", "Selected" };
+    private final String[] columnNames = { "IP", "MAC", "Selected" }; // make 3-column table
     private final List<String[]> data;
 
     public CheckableTableModelDemo(List<String[]> data) {
@@ -42,7 +41,7 @@ public class CheckableTableModelDemo extends JPanel {
         gbc.insets.bottom = 5;
         gbc.insets.left = 10;
         gbc.anchor = GridBagConstraints.WEST;
-        JButton clearBtn = new JButton("Clear Selection");
+        JButton clearBtn = new JButton("Clear Selection"); // clear selection button
         clearBtn.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
@@ -55,7 +54,7 @@ public class CheckableTableModelDemo extends JPanel {
         gbc.gridx++;
         gbc.insets.left = 20;
         gbc.anchor = GridBagConstraints.EAST;
-        JButton checkBtn = new JButton("Check IPS");
+        JButton checkBtn = new JButton("Check IPS"); // check ips button (ping command)
         checkBtn.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
@@ -93,17 +92,7 @@ public class CheckableTableModelDemo extends JPanel {
         gbc.gridx++;
         gbc.insets.left = 20;
         gbc.anchor = GridBagConstraints.EAST;
-        JComboBox<Integer> comboBox = new JComboBox<>();
-        for (int i = 1; i <= 12; i++) {
-            comboBox.addItem(i);
-        }
-        buttonPanel.add(new JLabel("Number of cores: "), gbc);
-        gbc.gridx++;
-        gbc.insets.left = 20;
-        gbc.anchor = GridBagConstraints.EAST;
-        buttonPanel.add(comboBox, gbc);
-        add(buttonPanel, BorderLayout.SOUTH);
-        JButton openBtn = new JButton("Open File");
+        JButton openBtn = new JButton("Open File"); // open file button
         openBtn.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
@@ -115,7 +104,7 @@ public class CheckableTableModelDemo extends JPanel {
                 int returnVal = chooser.showOpenDialog(getParent());
                 if (returnVal == JFileChooser.APPROVE_OPTION) {
                     File file = chooser.getSelectedFile();
-                    // TODO: Prase the file
+                    // TODO: Parse the file
                 }
             }
         });
@@ -123,17 +112,52 @@ public class CheckableTableModelDemo extends JPanel {
         gbc.insets.left = 20;
         gbc.anchor = GridBagConstraints.EAST;
         buttonPanel.add(openBtn, gbc);
-        JButton runBtn = new JButton("Run");
+        JButton runBtn = new JButton("Manage execution"); // manage execution
         runBtn.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                // TODO: Make run command
+                JFrame frame = new JFrame("MPI Parameters");
+                frame.setSize(1000, 500);
+                String[] paramTableColumns = { "Parameter name", "Description", "Value" };
+                Object[][] paramData = {
+                        { "Some param", "Param description" }
+                        // TODO: add MPI parameters
+                };
+                DefaultTableModel model = new DefaultTableModel(paramData, paramTableColumns) {
+                    @Override
+                    public boolean isCellEditable(int row, int column) {
+                        return column == 2; // only allow editing in the "Value" column
+                    }
+                };
+                JTable table = new JTable(model);
+                table.getColumnModel().getColumn(1).setPreferredWidth(400); // set width of Description column
+                table.setAutoResizeMode(JTable.AUTO_RESIZE_SUBSEQUENT_COLUMNS); // resize other columns to fit
+                table.getColumnModel().getColumn(0).setCellEditor(null); // make the first column uneditable
+                table.getColumnModel().getColumn(1).setCellEditor(null); // make the second column uneditable
+                JScrollPane scrollPane = new JScrollPane(table);
+                frame.add(scrollPane, BorderLayout.CENTER);
+
+                // create run button
+                JButton runButton = new JButton("Run");
+                runButton.addActionListener(new ActionListener() {
+                    @Override
+                    public void actionPerformed(ActionEvent e) {
+                        // TODO: Run MPI program with selected parameters
+                    }
+                });
+                JPanel buttonPanel = new JPanel();
+                buttonPanel.add(runButton);
+                frame.add(buttonPanel, BorderLayout.SOUTH);
+
+                // show window
+                frame.setVisible(true);
             }
         });
         gbc.gridx++;
         gbc.insets.left = 20;
         gbc.anchor = GridBagConstraints.EAST;
         buttonPanel.add(runBtn, gbc);
+        add(buttonPanel, BorderLayout.SOUTH);
     }
 
     class CheckableTableModel extends AbstractTableModel {
@@ -189,7 +213,7 @@ public class CheckableTableModelDemo extends JPanel {
 
     }
 
-    class CheckboxRenderer extends JCheckBox implements TableCellRenderer {
+    class CheckboxRenderer extends JCheckBox implements TableCellRenderer { // third column ("selected")
 
         public CheckboxRenderer() {
             setHorizontalAlignment(JCheckBox.CENTER);

@@ -1,7 +1,6 @@
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
-import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.regex.Matcher;
@@ -18,19 +17,19 @@ public class ArpTable {
         Process process = pb.start();
 
         try (BufferedReader reader = new BufferedReader(
-                new InputStreamReader(process.getInputStream(), StandardCharsets.UTF_8))) {
+                new InputStreamReader(process.getInputStream(), "CP866"))) { // get line
             String line;
             while ((line = reader.readLine()) != null) {
                 String[] row = new String[2];
                 Pattern ipPattern = Pattern.compile(IPADDRESS_PATTERN);
                 Matcher ipMatcher = ipPattern.matcher(line);
                 if (ipMatcher.find()) {
-                    row[0] = ipMatcher.group(0).replaceAll("[()]", "");
+                    row[0] = ipMatcher.group(0).replaceAll("[()]", ""); // search for ip
                 }
                 Pattern macPattern = Pattern.compile(MACADDRESS_PATTERN);
                 Matcher macMatcher = macPattern.matcher(line);
                 if (macMatcher.find()) {
-                    row[1] = macMatcher.group(0).replaceAll("[()]", "");
+                    row[1] = macMatcher.group(0).replaceAll("[()]", ""); // search for mac
                 }
                 if (row[0] != null && row[1] != null)
                     arps.add(row);
@@ -39,15 +38,4 @@ public class ArpTable {
 
         return arps;
     }
-
-    // public static void main(String[] args) throws Exception {
-    // List<String[]> arps = getArps();
-    // System.out.println("ARP:");
-    // for (String[] row : arps) {
-    // for (String s : row) {
-    // System.out.println(s + " ");
-    // }
-    // System.out.println();
-    // }
-    // }
 }
