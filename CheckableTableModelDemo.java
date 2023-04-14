@@ -4,21 +4,26 @@ import java.awt.GridBagLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.io.BufferedReader;
+import java.io.File;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.util.List;
 import javax.swing.JButton;
 import javax.swing.JCheckBox;
+import javax.swing.JComboBox;
+import javax.swing.JFileChooser;
 import javax.swing.JFrame;
+import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JTable;
 import javax.swing.JTextArea;
+import javax.swing.filechooser.FileNameExtensionFilter;
 import javax.swing.table.AbstractTableModel;
 import javax.swing.table.TableCellRenderer;
 
 public class CheckableTableModelDemo extends JPanel {
-    private final String[] columnNames = { "IPS", "MAC", "Selected" };
+    private final String[] columnNames = { "IP", "MAC", "Selected" };
     private final List<String[]> data;
 
     public CheckableTableModelDemo(List<String[]> data) {
@@ -50,7 +55,7 @@ public class CheckableTableModelDemo extends JPanel {
         gbc.gridx++;
         gbc.insets.left = 20;
         gbc.anchor = GridBagConstraints.EAST;
-        JButton checkBtn = new JButton("Check");
+        JButton checkBtn = new JButton("Check IPS");
         checkBtn.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
@@ -85,7 +90,50 @@ public class CheckableTableModelDemo extends JPanel {
             }
         });
         buttonPanel.add(checkBtn, gbc);
+        gbc.gridx++;
+        gbc.insets.left = 20;
+        gbc.anchor = GridBagConstraints.EAST;
+        JComboBox<Integer> comboBox = new JComboBox<>();
+        for (int i = 1; i <= 12; i++) {
+            comboBox.addItem(i);
+        }
+        buttonPanel.add(new JLabel("Number of cores: "), gbc);
+        gbc.gridx++;
+        gbc.insets.left = 20;
+        gbc.anchor = GridBagConstraints.EAST;
+        buttonPanel.add(comboBox, gbc);
         add(buttonPanel, BorderLayout.SOUTH);
+        JButton openBtn = new JButton("Open File");
+        openBtn.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                JFileChooser chooser = new JFileChooser();
+                chooser.setCurrentDirectory(new File("."));
+                FileNameExtensionFilter filter = new FileNameExtensionFilter(
+                        "C/C++ files", "c", "cpp");
+                chooser.setFileFilter(filter);
+                int returnVal = chooser.showOpenDialog(getParent());
+                if (returnVal == JFileChooser.APPROVE_OPTION) {
+                    File file = chooser.getSelectedFile();
+                    // TODO: Prase the file
+                }
+            }
+        });
+        gbc.gridx++;
+        gbc.insets.left = 20;
+        gbc.anchor = GridBagConstraints.EAST;
+        buttonPanel.add(openBtn, gbc);
+        JButton runBtn = new JButton("Run");
+        runBtn.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                // TODO: Make run command
+            }
+        });
+        gbc.gridx++;
+        gbc.insets.left = 20;
+        gbc.anchor = GridBagConstraints.EAST;
+        buttonPanel.add(runBtn, gbc);
     }
 
     class CheckableTableModel extends AbstractTableModel {
@@ -159,6 +207,7 @@ public class CheckableTableModelDemo extends JPanel {
         List<String[]> data = ArpTable.getArps();
         CheckableTableModelDemo panel = new CheckableTableModelDemo(data);
         JFrame frame = new JFrame("Checkable Table Model Demo");
+        frame.setSize(800, 600);
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         frame.add(panel);
         frame.pack();
