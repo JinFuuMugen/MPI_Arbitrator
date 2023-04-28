@@ -21,11 +21,11 @@ import javax.swing.table.AbstractTableModel;
 import javax.swing.table.DefaultTableModel;
 import javax.swing.table.TableCellRenderer;
 
-public class CheckableTableModelDemo extends JPanel {
+public class ArbitratorApplication extends JPanel {
     private final String[] columnNames = { "IP", "MAC", "Selected" }; // make 3-column table
     private final List<String[]> data;
 
-    public CheckableTableModelDemo(List<String[]> data) {
+    public ArbitratorApplication(List<String[]> data) {
         super(new BorderLayout());
         this.data = data;
         JTable table = new JTable(new CheckableTableModel());
@@ -92,63 +92,11 @@ public class CheckableTableModelDemo extends JPanel {
         gbc.gridx++;
         gbc.insets.left = 20;
         gbc.anchor = GridBagConstraints.EAST;
-        JButton openBtn = new JButton("Open File"); // open file button
-        openBtn.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                JFileChooser chooser = new JFileChooser();
-                chooser.setCurrentDirectory(new File("."));
-                FileNameExtensionFilter filter = new FileNameExtensionFilter(
-                        "C/C++ files", "c", "cpp");
-                chooser.setFileFilter(filter);
-                int returnVal = chooser.showOpenDialog(getParent());
-                if (returnVal == JFileChooser.APPROVE_OPTION) {
-                    File file = chooser.getSelectedFile();
-                    // TODO: Parse the file
-                }
-            }
-        });
-        gbc.gridx++;
-        gbc.insets.left = 20;
-        gbc.anchor = GridBagConstraints.EAST;
-        buttonPanel.add(openBtn, gbc);
         JButton runBtn = new JButton("Manage execution"); // manage execution
         runBtn.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                JFrame frame = new JFrame("MPI Parameters");
-                frame.setSize(1000, 500);
-                String[] paramTableColumns = { "Parameter name", "Description", "Value" };
-                Object[][] paramData = {
-                        { "Some param", "Param description" }
-                        // TODO: add MPI parameters
-                };
-                DefaultTableModel model = new DefaultTableModel(paramData, paramTableColumns) {
-                    @Override
-                    public boolean isCellEditable(int row, int column) {
-                        return column == 2; // only allow editing in the "Value" column
-                    }
-                };
-                JTable table = new JTable(model);
-                table.getColumnModel().getColumn(1).setPreferredWidth(400); // set width of Description column
-                table.setAutoResizeMode(JTable.AUTO_RESIZE_SUBSEQUENT_COLUMNS); // resize other columns to fit
-                table.getColumnModel().getColumn(0).setCellEditor(null); // make the first column uneditable
-                table.getColumnModel().getColumn(1).setCellEditor(null); // make the second column uneditable
-                JScrollPane scrollPane = new JScrollPane(table);
-                frame.add(scrollPane, BorderLayout.CENTER);
-
-                // create run button
-                JButton runButton = new JButton("Run");
-                runButton.addActionListener(new ActionListener() {
-                    @Override
-                    public void actionPerformed(ActionEvent e) {
-                        // TODO: Run MPI program with selected parameters
-                    }
-                });
-                JPanel buttonPanel = new JPanel();
-                buttonPanel.add(runButton);
-                frame.add(buttonPanel, BorderLayout.SOUTH);
-
+                JFrame frame = new ParamFrame().GetParamFrame();
                 // show window
                 frame.setVisible(true);
             }
@@ -166,11 +114,11 @@ public class CheckableTableModelDemo extends JPanel {
         private final Object[][] data;
 
         public CheckableTableModel() {
-            int rowCount = CheckableTableModelDemo.this.data.size();
+            int rowCount = ArbitratorApplication.this.data.size();
             data = new Object[rowCount][3];
             for (int i = 0; i < rowCount; i++) {
-                data[i][0] = CheckableTableModelDemo.this.data.get(i)[0];
-                data[i][1] = CheckableTableModelDemo.this.data.get(i)[1];
+                data[i][0] = ArbitratorApplication.this.data.get(i)[0];
+                data[i][1] = ArbitratorApplication.this.data.get(i)[1];
                 data[i][2] = Boolean.FALSE;
             }
         }
@@ -229,7 +177,7 @@ public class CheckableTableModelDemo extends JPanel {
 
     public static void main(String[] args) throws IOException {
         List<String[]> data = ArpTable.getArps();
-        CheckableTableModelDemo panel = new CheckableTableModelDemo(data);
+        ArbitratorApplication panel = new ArbitratorApplication(data);
         JFrame frame = new JFrame("Checkable Table Model Demo");
         frame.setSize(800, 600);
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
