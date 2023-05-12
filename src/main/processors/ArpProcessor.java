@@ -1,3 +1,5 @@
+package src.main.processors;
+
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
@@ -6,7 +8,7 @@ import java.util.List;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-public class ArpTable {
+public class ArpProcessor {
     public static List<String[]> getArps() throws IOException {
         String IPADDRESS_PATTERN = "(?:(?:25[0-5]|2[0-4]\\d|[01]?\\d\\d?)\\.){3}(?:25[0-5]|2[0-4]\\d|[01]?\\d\\d?)"; // ipregex
         String MACADDRESS_PATTERN = "([0-9A-Fa-f]{2}[:-]){5}([0-9A-Fa-f]{2})"; // macregex
