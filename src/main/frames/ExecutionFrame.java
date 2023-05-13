@@ -1,23 +1,16 @@
 package src.main.frames;
 
 import src.main.cmd.Arbitrator;
-
 import java.awt.BorderLayout;
 import java.awt.Color;
 import java.awt.Component;
 import java.awt.Font;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
-import java.io.BufferedReader;
 import java.io.IOException;
-import java.io.InputStreamReader;
-
 import javax.swing.JButton;
 import javax.swing.JFrame;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JTable;
-import javax.swing.JTextArea;
 import javax.swing.table.DefaultTableCellRenderer;
 import javax.swing.table.DefaultTableModel;
 import javax.swing.table.TableCellRenderer;
@@ -102,42 +95,21 @@ public class ExecutionFrame extends JFrame {
 
         JButton runButton = new JButton("Run");
         runButton.addActionListener(e -> {
-            String stdMpi = " -l msmpi -l stdc++ -L \"C:\\Program Files (x86)\\Microsoft SDKs\\MPI\\Lib\\x64\" -I \"C:\\Program Files (x86)\\Microsoft SDKs\\MPI\\Include\"";
+            String stdMpi = " -l msmpi -L \"C:\\Program Files (x86)\\Microsoft SDKs\\MPI\\Lib\\x64\" -I \"C:\\Program Files (x86)\\Microsoft SDKs\\MPI\\Include\"";
             // String command = "g++ -o " + fileName + " " +
             // ArbitratorApplication.selectedFilePath + stdMpi;
-            String command = "cmd /c cd /d " + Arbitrator.getSelectedFilePath()
+            String command = "cmd /c start cmd /k \"cd /d " + Arbitrator.getSelectedFilePath()
                     + " && echo Working directory changed to: " + Arbitrator.getSelectedFilePath()
-                    + " && " + "g++ " + Arbitrator.getSelectedFileName() + stdMpi
-                    + " && echo Compiled!  && echo Program output:"
-                    + " && mpiexec -host 192.168.1.101 -np 3 a.exe";
+                    + " && " + "gcc " + Arbitrator.getSelectedFileName() + stdMpi
+                    + " && echo Compiled! && echo Program output:"
+                    + " && mpiexec -host 192.168.1.33 -np 3 a.exe\"";
             // g++ -o hello.exe hello.cpp -l msmpi -L "C:\Program Files (x86)\Microsoft
             // SDKs\MPI\Lib\x64" -I "C:\Program Files (x86)\Microsoft SDKs\MPI\Include"
             try {
-                Process process = Runtime.getRuntime().exec(command);
-                BufferedReader reader = new BufferedReader(new InputStreamReader(process.getInputStream()));
-                StringBuilder builder = new StringBuilder();
-                String line;
-                while ((line = reader.readLine()) != null) {
-                    builder.append(line);
-                    builder.append(System.getProperty("line.separator"));
-                }
-                String output = builder.toString();
-
-                JFrame frame1 = new JFrame("Command Result");
-                JTextArea textArea = new JTextArea(output);
-                textArea.setFont(new Font("Arial", Font.PLAIN, 15));
-                textArea.setEditable(false);
-                JScrollPane scrollPane1 = new JScrollPane(textArea);
-                frame1.add(scrollPane1);
-                frame1.setSize(400, 300);
-                frame1.setVisible(true);
-                frame1.setAlwaysOnTop(true);
+                Runtime.getRuntime().exec(command);
             } catch (IOException ex) {
-                ex.printStackTrace();
+                throw new RuntimeException(ex);
             }
-
-            frame.setSize(500, 500);
-            frame.setVisible(true);
         });
 
         JPanel buttonPanel = new JPanel();

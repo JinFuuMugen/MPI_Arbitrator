@@ -44,7 +44,7 @@ public class AddressesFrame extends JPanel {
         gbc.insets.left = 20;
         gbc.anchor = GridBagConstraints.EAST;
 
-        buttonPanel.add(new CheckButton("Check IPs", data), gbc);                          //creating check button
+        buttonPanel.add(new CheckButton("Check hosts", data), gbc);                          //creating check button
         gbc.gridx++;
         gbc.gridx++;
         gbc.insets.left = 20;

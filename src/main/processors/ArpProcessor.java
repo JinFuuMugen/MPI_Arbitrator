@@ -3,6 +3,8 @@ package src.main.processors;
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
+import java.net.InetAddress;
+import java.net.NetworkInterface;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.regex.Matcher;
@@ -12,9 +14,19 @@ public class ArpProcessor {
     public static List<String[]> getArps() throws IOException {
         String IPADDRESS_PATTERN = "(?:(?:25[0-5]|2[0-4]\\d|[01]?\\d\\d?)\\.){3}(?:25[0-5]|2[0-4]\\d|[01]?\\d\\d?)"; // ipregex
         String MACADDRESS_PATTERN = "([0-9A-Fa-f]{2}[:-]){5}([0-9A-Fa-f]{2})"; // macregex
-
         List<String[]> arps = new ArrayList<>();
 
+        // Get current IP address
+        InetAddress addr = InetAddress.getLocalHost();
+        String currentIp = addr.getHostAddress();
+
+        // Add current IP and MAC to the list
+        String[] currentRow = new String[2];
+        currentRow[0] = currentIp;
+        currentRow[1] = getMacAddress(currentIp);
+        arps.add(currentRow);
+
+        // Process ARP table
         ProcessBuilder pb = new ProcessBuilder("arp", "-a");
         Process process = pb.start();
 
@@ -39,5 +51,26 @@ public class ArpProcessor {
         }
 
         return arps;
+    }
+
+    // Helper method to get MAC address for a given IP
+    private static String getMacAddress(String ip) {
+        try {
+            NetworkInterface network = NetworkInterface.getByInetAddress(InetAddress.getByName(ip));
+            byte[] mac = network.getHardwareAddress();
+            if (mac != null) {
+                StringBuilder sb = new StringBuilder();
+                for (int i = 0; i < mac.length; i++) {
+                    sb.append(String.format("%02X", mac[i]));
+                    if (i < mac.length - 1) {
+                        sb.append(":");
+                    }
+                }
+                return sb.toString();
+            }
+            return null;
+        } catch (Exception e) {
+            return null;
+        }
     }
 }
