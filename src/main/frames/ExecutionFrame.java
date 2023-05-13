@@ -23,40 +23,7 @@ public class ExecutionFrame extends JFrame {
         Object[][] paramData = {
                 { "File", "Name of C/CPP MPI file", Arbitrator.getSelectedFileName() },
                 { "Path", "Directory of C/CPP MPI file", Arbitrator.getSelectedFilePath() },
-                { "-localonly", "Specifies that MPI processes may only be launched on the local machine", "" },
-                { "-envall", "Propagates all environment variables from the launching machine to the MPI processes",
-                        "" },
-                { "-exitcodes", "Specifies that MPI processes should return an integer exit code upon completion", "" },
-                { "-gdb", "Runs the debugger using MPI processes", "" },
-                { "-verbose", "Displays verbose output for MPI processes", "" },
-                { "-timeout", "Specifies the amount of time (in milliseconds) to wait for an MPI process to start",
-                        "" },
-                { "-np", "Specifies the number of MPI processes to start", "" },
-                { "-map", "Specifies how to map the MPI processes to nodes and processors", "" },
-                { "-mapping", "Specifies how to map the MPI processes to nodes and processors (same as -map)", "" },
-                { "-file", "Specifies the location of the MPI configuration file", "" },
-                { "-wdir", "Specifies the working directory for MPI processes", "" },
-                { "-env", "Propagates a specific environment variable from the launching machine to the MPI processes",
-                        "" },
-                { "-envlist",
-                        "Propagates a list of environment variables from the launching machine to the MPI processes",
-                        "" },
-                { "-genv",
-                        "Propagates a specific environment variable to the MPI processes, but does not include it in the launching machine's environment",
-                        "" },
-                { "-genvlist",
-                        "Propagates a list of environment variables to the MPI processes, but does not include them in the launching machine's environment",
-                        "" },
-                { "-stdin", "Specifies the standard input file for MPI processes", "" },
-                { "-launcher", "Specifies the launcher to use for MPI processes", "" },
-                { "-affinity", "Specifies the processor affinity for each MPI process", "" },
-                { "-wait", "Waits for MPI processes to complete before exiting", "" },
-                { "-enablex", "Enables X11 forwarding for MPI processes", "" },
-                { "-noprompt", "Suppresses the MPI process prompt", "" },
-                { "-priority", "Specifies the priority of MPI processes", "" },
-                { "-pools", "Specifies the number of process pools to use", "" },
-                { "-machines", "Specifies a list of machines to use for MPI processes", "" },
-                { "-gdbattach", "Attaches the debugger to running MPI processes", "" }
+                {"Hosts", "Full path to hosts.txt", Arbitrator.getSelectedFilePath() + "hosts.txt"}
         };
         DefaultTableModel model = new DefaultTableModel(paramData, paramTableColumns) {
             @Override
@@ -102,7 +69,7 @@ public class ExecutionFrame extends JFrame {
                     + " && echo Working directory changed to: " + Arbitrator.getSelectedFilePath()
                     + " && " + "gcc " + Arbitrator.getSelectedFileName() + stdMpi
                     + " && echo Compiled! && echo Program output:"
-                    + " && mpiexec -host 192.168.1.33 -np 3 a.exe\"";
+                    + " && mpiexec -machinefile hosts.txt a.exe\"";
             // g++ -o hello.exe hello.cpp -l msmpi -L "C:\Program Files (x86)\Microsoft
             // SDKs\MPI\Lib\x64" -I "C:\Program Files (x86)\Microsoft SDKs\MPI\Include"
             try {

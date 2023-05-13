@@ -5,11 +5,9 @@ import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
 import java.io.IOException;
 import java.util.List;
-import javax.swing.JCheckBox;
-import javax.swing.JPanel;
-import javax.swing.JScrollPane;
-import javax.swing.JTable;
-import javax.swing.table.TableCellRenderer;
+import java.util.stream.IntStream;
+import javax.swing.*;
+
 import src.main.visuals.AddressesTable;
 import src.main.visuals.CheckButton;
 import src.main.visuals.ClearSelectionsButton;
@@ -26,7 +24,10 @@ public class AddressesFrame extends JPanel {
         super(new BorderLayout());
         table = new JTable(new AddressesTable());                       //creating ips and macs table
 
-        table.getColumnModel().getColumn(2).setCellRenderer(new CheckboxRenderer());
+
+        JComboBox<Integer> comboBox = new JComboBox<>(IntStream.rangeClosed(0, 30).boxed().toArray(Integer[]::new));            //set checkbox renderer
+        table.getColumnModel().getColumn(3).setCellEditor(new DefaultCellEditor(comboBox));
+
         JScrollPane scrollPane = new JScrollPane(table);
         add(scrollPane, BorderLayout.CENTER);
 
@@ -51,19 +52,5 @@ public class AddressesFrame extends JPanel {
         gbc.anchor = GridBagConstraints.EAST;
         buttonPanel.add(new ManageExecutionButton("Manage Execution"), gbc);
         add(buttonPanel, BorderLayout.SOUTH);
-    }
-
-    static class CheckboxRenderer extends JCheckBox implements TableCellRenderer { // third column ("selected")
-
-        public CheckboxRenderer() {
-            setHorizontalAlignment(JCheckBox.CENTER);
-        }
-
-        @Override
-        public java.awt.Component getTableCellRendererComponent(JTable table, Object value, boolean isSelected,
-                boolean hasFocus, int row, int column) {
-            setSelected((value != null && (Boolean) value));
-            return this;
-        }
     }
 }

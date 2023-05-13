@@ -17,6 +17,7 @@ public class CheckButton extends JButton {
                     String ip = (String) AddressesFrame.table.getModel().getValueAt(i, 0);
                     command.append(" && echo Checking hostname of ").append(ip).append(": ");
                     command.append(" && mpiexec -timeout 15 -host ").append(ip).append(" hostname");
+                    command.append(" && echo __________________");
                 }
             }
             command.append("\"");
