@@ -5,11 +5,12 @@ import src.main.processors.ArpProcessor;
 
 import javax.swing.*;
 import javax.swing.filechooser.FileNameExtensionFilter;
+import java.awt.*;
 import java.io.File;
 import java.io.IOException;
 import java.util.List;
 
-public class Arbitrator {
+public class Launcher {
 
     private static String selectedFilePath;
 
@@ -24,9 +25,10 @@ public class Arbitrator {
     }
 
 
+
     public static void main(String[] args) throws IOException {
         try {
-
+            UIManager.setLookAndFeel(UIManager.getSystemLookAndFeelClassName());
             JFileChooser chooser = new JFileChooser();                                                                              //get c/cpp file
             FileNameExtensionFilter filter = new FileNameExtensionFilter("C/C++ files", "c", "cpp");
             chooser.setFileFilter(filter);
@@ -39,9 +41,13 @@ public class Arbitrator {
             selectedFilePath = file.getParent();
             selectedFileName = file.getName();
 
+
             List<String[]> data = ArpProcessor.getArps();                                       //get arp table
             AddressesFrame panel = new AddressesFrame(data);                                    //write it to table
             JFrame frame = new JFrame("MPI Arbitrator Application");                       //show table
+            ImageIcon icon = new ImageIcon("src/main/img/logo.png");
+            Image image = icon.getImage();
+            frame.setIconImage(image);
                                                                                                 //____________//
             frame.setSize(800, 600);                                               // show frame //
             frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);                             //             //
@@ -70,6 +76,9 @@ public class Arbitrator {
             if (response == JOptionPane.YES_OPTION) {
                 main(args);
             }
+        } catch (UnsupportedLookAndFeelException | ClassNotFoundException | InstantiationException |
+                 IllegalAccessException e) {
+            throw new RuntimeException(e);
         }
     }
 }

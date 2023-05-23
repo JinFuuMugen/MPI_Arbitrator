@@ -49,7 +49,6 @@ public class ArpProcessor {
                     arps.add(row);
             }
         }
-
         return arps;
     }
 
