@@ -40,6 +40,16 @@ public class Launcher {
     }
 
     public static void main(String[] args) throws IOException {
+
+        Thread smpdThread = new Thread(() -> {                                              //run smpd
+            try {
+                Runtime.getRuntime().exec("cmd.exe /c smpd -d 3");
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        });
+        smpdThread.start();
+
         try {
             UIManager.setLookAndFeel(new FlatMacDarkLaf());
             UIManager.put("Table.cellNoFocusBorder", true);

@@ -20,7 +20,7 @@ public class CheckButton extends JButton {
                 if (AddressesFrame.addressTable.getModel().getValueAt(i, 3) == Boolean.TRUE) {
                     final int index = i;
                     executor.execute(() -> {
-                        StringBuilder command = new StringBuilder("cmd /c \"cd /d ").append(Launcher.getSelectedFilePath()).append(" && ").append((String) AddressesFrame.pathsTable.getValueAt(2, 2)).append(" -timeout 5 -host ");
+                        StringBuilder command = new StringBuilder("cmd /c \"cd /d ").append(Launcher.getSelectedFilePath()).append(" && ").append((String) AddressesFrame.pathsTable.getValueAt(0, 2)).append(" -timeout 5 -host ");
                         String ip = (String) AddressesFrame.addressTable.getModel().getValueAt(index, 0);
                         command.append(ip).append(" hostname\"");
                         try {
