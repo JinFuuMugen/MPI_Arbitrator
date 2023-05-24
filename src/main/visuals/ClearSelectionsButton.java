@@ -10,7 +10,7 @@ public class ClearSelectionsButton extends JButton {
         super(name);
         addActionListener(e -> {
             for (int i = 0; i < data.size(); i++) {
-                AddressesFrame.table.getModel().setValueAt(false, i, 2);
+                AddressesFrame.addressTable.getModel().setValueAt(false, i, 2);
             }
         });
     }

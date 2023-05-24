@@ -1,6 +1,6 @@
 package src.main.visuals;
 
-import src.main.cmd.Arbitrator;
+import src.main.cmd.Launcher;
 import src.main.frames.AddressesFrame;
 import src.main.frames.ExecutionFrame;
 
@@ -10,18 +10,17 @@ import java.io.*;
 public class ManageExecutionButton extends JButton{
 
     private void WriteHostsFile() throws IOException {
-        //TODO finish this function
-        File file = new File(Arbitrator.getSelectedFilePath() + "hosts.txt");
+        File file = new File(Launcher.getSelectedFilePath() + "hosts.txt");
         try (PrintWriter writer = new PrintWriter(file)) {
             writer.print("");
         }
 
-        for (int i = 0; i < AddressesFrame.table.getRowCount(); i++){
-            if (AddressesFrame.table.getValueAt(i, 2).equals(true)){
-                if (!AddressesFrame.table.getValueAt(i, 3).equals(0)){
+        for (int i = 0; i < AddressesFrame.addressTable.getRowCount(); i++){
+            if (AddressesFrame.addressTable.getValueAt(i, 3).equals(true)){
+                if (!AddressesFrame.addressTable.getValueAt(i, 4).equals(0)){
                     try (BufferedWriter writer = new BufferedWriter(new FileWriter(file, true))){
-                        writer.write(AddressesFrame.table.getValueAt(i, 0) + " " + AddressesFrame.table.getValueAt(i, 3)); // Записываем строку в файл
-                        writer.write(System.lineSeparator()); // Записываем перевод строки
+                        writer.write(AddressesFrame.addressTable.getValueAt(i, 0) + " " + AddressesFrame.addressTable.getValueAt(i, 4));
+                        writer.write(System.lineSeparator());
                     } catch (IOException e) {
                         throw new RuntimeException(e);
                     }
@@ -36,6 +35,7 @@ public class ManageExecutionButton extends JButton{
         addActionListener(e -> {
             try {
                 WriteHostsFile();
+
             } catch (IOException ex) {
                 throw new RuntimeException(ex);
             }
