@@ -64,4 +64,3 @@ public class AddressesTable extends AbstractTableModel {
         fireTableCellUpdated(row, col);
     }
 }
-
